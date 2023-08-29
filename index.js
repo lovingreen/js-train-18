@@ -6,6 +6,12 @@
  *  data - вхідні дані.
  */
 function checkData(data) {
+  if (!(Object.keys(data).length === 0)) {
+    return data
+  } else {
+    const err = Error("Об'єкт пустий")
+    return err.message
+  }
   // Якщо об'єкт не пустий повертаємо дані
   // Інакше створюємо помилку,в якості тексту помилки ми використовуємо рядок "Об'єкт пустий".
   // Якщо виникла помилка, повертаємо її повідомлення.
@@ -26,6 +32,12 @@ console.log(checkData({ name: "John", age: 30, city: "New York" }));
  *  jsonStr - JSON-рядок для аналізу.
  */
 function parseJson(jsonStr) {
+  try {
+    const jsonObj = JSON.parse(jsonStr) 
+    return jsonObj
+  } catch (error) {
+    return error.message
+  }
   // Спроба розпарсити JSON-рядок.
   // Якщо рядок має невірний формат, виникне помилка, яку ми обробляємо у блоку catch.
   // Повертаємо отриманий об'єкт
@@ -53,6 +65,15 @@ console.log(parseJson(invalidJson));
  *  age - вік користувача.
  */
 function getAge(age) {
+  try {
+    if (age < 0) {
+      throw new Error('Вік не може бути менше 0!') 
+    }
+    return `Вік користувача: ${age}`
+  } catch (err) {
+    err.name = 'AgeError';
+    return `err {name: ${err.name}, message: ${err.message}}`
+  }
   // Спроба отримати вік користувача.
   // Якщо вік менше 0, виникне помилка, яку ми обробляємо у блоку catch.
   // Генеруємо помилку, якщо вік менше 0 з повідомленням Вік не може бути менше 0!.
@@ -79,6 +100,15 @@ console.log(getAge(20));
  *  id - ID книги.
  */
 function getBookById(books, id) {
+  try {
+    const book = books.find((book) => book.id === id);
+    if (!book) {
+      throw new TypeError(`Книга з ID ${id} не знайдена!`);
+    }
+    return `Книга: ${book.title}`;
+  } catch (error) {
+      return error.message;
+  }
   // Спроба знайти книгу по ID та записати в змінну book.
   // Якщо книга не знайдена, генерується TypeError з повідомленням Книга з ID ${id} не знайдена!.
   // Повертаємо book
@@ -119,6 +149,15 @@ console.log(
  *  encodedString - Рядок для декодування.
  */
 function decodeURIComponentWrapper(encodedString) {
+  try {
+    const decodedString = decodeURIComponent(encodedString);
+    return decodedString;
+  } catch (error) {
+    if (error instanceof URIError) {
+        return "Помилка декодування URI";
+    }
+    return error.toString();
+}
   // Спроба декодувати рядок
   // Повертаємо декодований рядок
   // Якщо виникла помилка, і ії назва дорівнює URIError повертаємо помилку про неправильний URI формат з повідомленням Помилка декодування URI,
@@ -138,6 +177,19 @@ console.log(decodeURIComponentWrapper("%E0%A4%A")); // виведе інформ
  *  numbers - Масив чисел для пошуку.
  */
 function findEvenNumber(numbers) {
+  let evenNumber;
+
+  try {
+    evenNumber = numbers.find((num) => num%2 === 0);
+    if (!evenNumber) {
+      throw new Error('У масиві немає чисел, що діляться на 2 без остачі!'); 
+    }
+    return evenNumber;
+  } catch (err) {
+    return err.toString()
+  } finally {
+    console.log(numbers);
+  }
   // Створюємо змінну evenNumber без значення
   // Шукаємо перше число, що ділиться на 2 без остачі, та записуємо в нашу змінну.
   // Якщо такого числа немає, кидаємо помилку з повідомлення У масиві немає чисел, що діляться на 2 без остачі!.
